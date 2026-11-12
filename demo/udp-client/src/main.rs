@@ -1,7 +1,7 @@
 use std::time::Duration;
 
-use nprpc::autobuffer;
-use nprpc_udp::UdpClient;
+use temperance::autobuffer;
+use temperance_udp::UdpClient;
 
 use udp_api::hello::Client as _;
 use udp_api::kv::Client as _;

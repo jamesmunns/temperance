@@ -1,8 +1,8 @@
 [workspace]
 resolver = "3"
 members = ["demo/demo-api",
-  "nprpc",
-  "nprpc-udp",
+  "temperance",
+  "temperance-udp",
   "demo/*",
 ]
 

@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-nprpc.path = "../../nprpc"
+temperance.path = "../../temperance"
 serde = { version = "1.0.229", default-features = false, features = ["derive"] }
 postcard-schema-ng.workspace = true
 postcard.workspace = true

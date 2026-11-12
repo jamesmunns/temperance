@@ -2,9 +2,9 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-//! # Not Postcard-RPC
+//! # `temperance`
 //!
-//! It needs a better name. `nprpc` is a tool for communication that is:
+//! > RPC, in moderation.
 //!
 //! * Strongly typed (and Rust focused)
 //!     * Uses `postcard-schema` for deriving payload schemas.
@@ -14,7 +14,7 @@
 //!     * Uses `serde` and `postcard` for serialization and
 //!       deserialization.
 //!     * `postcard-dyn` can be used for dynamic ser/de, and transcoding frames
-//!       to/from JSON (Coming Soon™️).
+//!       to/from JSON
 //! * Strongly ordered
 //!     * Client initiates request to Server, then Server replies to Client.
 //!     * No concurrent in-flight requests.
@@ -26,7 +26,8 @@
 //!       as request/response data payloads.
 //!     * Can work over any transport, clients and servers both have `Io` traits
 //!       for custom plumbing.
-//!     * [`nprpc-udp`](https://docs.rs/nprpc-udp) provides blocking clients
+//!     * [`temperance-udp`](https://docs.rs/temperance-udp) provides blocking
+//!       clients
 //!       and servers over `std` UDP sockets.
 //!     * For bounded types, maximum message sizes can be calculated, and
 //!       necessary buffer sizes are generated as `const`s.
@@ -47,7 +48,7 @@
 //! `example-api` crate.
 //!
 //! ```rust
-//! use nprpc::interface;
+//! use temperance::interface;
 //!
 //! interface! {
 //!     /// This module named "example" contains everything you need for both
@@ -65,7 +66,7 @@
 //! "Implement missing methods" action to do this quickly.
 //!
 //! ```rust
-//! # use nprpc::interface;
+//! # use temperance::interface;
 //! #
 //! # interface! {
 //! #     /// This module named "example" contains everything you need for both
@@ -76,7 +77,7 @@
 //! #         fn echo(u32) -> u32;
 //! #     }
 //! # }
-//! use nprpc::{Request, Served};
+//! use temperance::{Request, Served};
 //! // From the `example-api` crate above
 //! use example::Server;
 //!
@@ -105,24 +106,24 @@
 //!
 //! # struct WireIo;
 //! # struct WireStorage;
-//! # use nprpc::io::server::{ServerIoError, RawIoFrame};
-//! # impl nprpc::io::server::Io for WireIo {
+//! # use temperance::io::server::{ServerIoError, RawIoFrame};
+//! # impl temperance::io::server::Io for WireIo {
 //! #     type Error = ();
 //! #     type Meta = ();
 //! #     fn recv_one_frame_raw<'data>(&mut self, _: &'data mut [u8])
 //! #         -> Result<Option<RawIoFrame<'data, ()>>, ServerIoError<()>>
 //! #     {
-//! #         Err(nprpc::io::server::ServerIoError::Io(()))
+//! #         Err(temperance::io::server::ServerIoError::Io(()))
 //! #     }
 //! #     fn send_one_frame_raw(&mut self, _: RawIoFrame<'_, ()>)
 //! #         -> Result<(), ServerIoError<()>> { todo!() }
 //! # }
-//! # impl nprpc::io::Storage for WireStorage {
-//! #     fn buffers(&mut self) -> nprpc::io::StorageView<'_> {
-//! #         nprpc::io::StorageView { rqst_buf: &mut [], resp_buf: &mut [] }
+//! # impl temperance::io::Storage for WireStorage {
+//! #     fn buffers(&mut self) -> temperance::io::StorageView<'_> {
+//! #         temperance::io::StorageView { rqst_buf: &mut [], resp_buf: &mut [] }
 //! #     }
 //! # }
-//! # impl nprpc::io::server::Backend for WireBackend {
+//! # impl temperance::io::server::Backend for WireBackend {
 //! #     type Io = WireIo;
 //! #     type Storage = WireStorage;
 //! #     fn parts(&mut self) -> (&mut WireStorage, &mut WireIo) {
@@ -161,7 +162,7 @@
 //! call the methods you defined.
 //!
 //! ```rust,no_run
-//! # use nprpc::interface;
+//! # use temperance::interface;
 //! #
 //! # interface! {
 //! #     /// This module named "example" contains everything you need for both
@@ -175,15 +176,15 @@
 //! #
 //! # struct WireIo;
 //! # struct WireStorage;
-//! # impl nprpc::io::client::Io for WireIo {
+//! # impl temperance::io::client::Io for WireIo {
 //! #     type Error = ();
 //! #     fn send_then_receive_raw_frames<'a>(&mut self, _: &[u8], _: &'a mut [u8])
 //! #         -> Result<&'a [u8], ()> { todo!() }
 //! # }
-//! # impl nprpc::io::Storage for WireStorage {
-//! #     fn buffers(&mut self) -> nprpc::io::StorageView<'_> { todo!() }
+//! # impl temperance::io::Storage for WireStorage {
+//! #     fn buffers(&mut self) -> temperance::io::StorageView<'_> { todo!() }
 //! # }
-//! # impl nprpc::io::client::Backend for WireBackend {
+//! # impl temperance::io::client::Backend for WireBackend {
 //! #     type Io = WireIo;
 //! #     type Storage = WireStorage;
 //! #     fn next_sequence_number(&mut self) -> u16 { todo!() }
@@ -192,8 +193,8 @@
 //! // Not shown: impl Backend for WireBackend { .. }
 //! struct WireBackend;
 //!
-//! use nprpc::io::client::ClientIoError;
-//! use nprpc::Response;
+//! use temperance::io::client::ClientIoError;
+//! use temperance::Response;
 //!
 //! // Pull in the extension trait to get access to the methods for any type
 //! // that impls `Backend`

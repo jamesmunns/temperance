@@ -1,6 +1,3 @@
-# Not Postcard-RPC
+# `temperance`
 
-## TODOs
-
-- [ ] Add optional snapshot testing
-- [x] Add optional save-schemas-to-link-section-static, for humility extraction (see `flat_interface!`)
+Yet another RPC library, inspired by [`postcard-rpc`](https://docs.rs/postcard-rpc/), but for a difference scene.

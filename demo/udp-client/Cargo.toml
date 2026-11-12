@@ -5,7 +5,7 @@ edition = "2024"
 
 [dependencies]
 udp-api.path = "../udp-api"
-nprpc.path = "../../nprpc"
-nprpc-udp.path = "../../nprpc-udp"
+temperance.path = "../../temperance"
+temperance-udp.path = "../../temperance-udp"
 postcard.workspace = true
 postcard-schema-ng.workspace = true

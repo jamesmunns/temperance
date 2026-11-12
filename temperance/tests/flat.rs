@@ -9,7 +9,7 @@ use postcard_schema_ng::{
 };
 use serde::{Deserialize, Serialize};
 
-use nprpc::{
+use temperance::{
     compose_interfaces, flat::DecodeError, flat::FLAT_VERSION, flat::FlatNode,
     flat::OwnedInterfaceInfo, flat_interface, interface, interface::InterfaceInfo,
 };
@@ -76,7 +76,7 @@ fn expected(name: &str, info: &InterfaceInfo) -> OwnedInterfaceInfo {
         methods: info
             .methods
             .iter()
-            .map(|m| nprpc::flat::OwnedMethodInfo {
+            .map(|m| temperance::flat::OwnedMethodInfo {
                 name: m.name.to_string(),
                 key: m.key,
                 req_schema: OwnedDataModelType::from(m.req_schema),
@@ -143,7 +143,7 @@ fn unique() {
 
     // Everything is smaller than without de-duplication
     let scratch =
-        nprpc::flat::flat_scratch(composite::info::NAME, &composite::info::INTERFACE_INFO);
+        temperance::flat::flat_scratch(composite::info::NAME, &composite::info::INTERFACE_INFO);
     assert!(COMPOSITE.nodes.len() < scratch.nodes);
     assert!(COMPOSITE.children.len() < scratch.children / 2);
     assert!(COMPOSITE.names.len() < scratch.names);
@@ -198,7 +198,7 @@ fn bad_input() {
             _ => None,
         })
         .unwrap();
-    let long = nprpc::flat::Span {
+    let long = temperance::flat::Span {
         start: elems.start,
         len: ONE.children.len() as u32,
     };

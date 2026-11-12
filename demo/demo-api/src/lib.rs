@@ -1,6 +1,6 @@
-use nprpc::{autobuffer, compose_interfaces, interface};
 use postcard_schema_ng::Schema;
 use serde::{Deserialize, Serialize};
+use temperance::{autobuffer, compose_interfaces, interface};
 
 /////////////////////////////////////////////////////
 // API types
@@ -84,7 +84,7 @@ interface! {
 }
 
 pub struct ServerImpl;
-use nprpc::Request;
+use temperance::Request;
 
 #[cfg(feature = "std")]
 impl basic::Server for ServerImpl {
@@ -126,7 +126,7 @@ impl basic::Server for ServerImpl {
 }
 
 impl ops::Server for ServerImpl {
-    fn mult_three(&mut self, _req: nprpc::Request<u32>) -> u32 {
+    fn mult_three(&mut self, _req: temperance::Request<u32>) -> u32 {
         todo!()
     }
 }
@@ -164,7 +164,7 @@ autobuffer!(BorrowBuf, borrow);
 mod test {
     use std::ops::Deref;
 
-    use nprpc::{
+    use temperance::{
         RequestRaw, ServerError, autobuffer,
         io::client::{Backend, Io},
         wire::{Header, Operation},
@@ -294,7 +294,7 @@ mod test {
 
     #[test]
     pub fn composite_dispatch() {
-        use nprpc::{
+        use temperance::{
             RequestRaw, ServerError,
             interface::Method,
             wire::{Header, WIRE_VERSION},
@@ -339,7 +339,7 @@ mod test {
             println!("{k:?}");
         }
 
-        const H: usize = nprpc::wire::HEADER_LEN;
+        const H: usize = temperance::wire::HEADER_LEN;
         const A: usize = composite::info::INTERFACE_INFO.max_request_size.unwrap();
         const B: usize = composite::info::INTERFACE_INFO.max_response_size.unwrap();
 

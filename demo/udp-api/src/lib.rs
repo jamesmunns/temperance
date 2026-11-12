@@ -1,6 +1,6 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
-use nprpc::{compose_interfaces, interface};
+use temperance::{compose_interfaces, interface};
 
 /////////////////////////////////////////////////////
 // API types
@@ -41,7 +41,7 @@ compose_interfaces! {
     ]
 }
 
-// TODO: We could make this a builtin part of nprpc? But it's also pretty easy
+// TODO: We could make this a builtin part of temperance? But it's also pretty easy
 // to opt-in to, so maybe we keep it more as a "recipe" than a built-in.
 #[cfg(test)]
 mod test {

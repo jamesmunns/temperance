@@ -2,14 +2,14 @@
 
 use postcard_schema_ng::{key::Key, max_len::MaxLenStr};
 
-use nprpc::interface;
-use nprpc::{
+use serde::Serialize;
+use temperance::interface;
+use temperance::{
     Request, Served, ServerError, ServerIoError, autobuffer,
     interface::Method,
     io::server::{Backend, Io, RawIoFrame},
     wire::{HEADER_LEN, Header, HeaderError, Operation, WIRE_VERSION, WireError},
 };
-use serde::Serialize;
 
 interface! {
     mod example {

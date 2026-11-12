@@ -10,13 +10,13 @@ use std::{
     time::Duration,
 };
 
-use nprpc::{
+use temperance::{
     ClientError, ClientIoError, Request, Served, autobuffer, interface,
     interface::Method,
     io::client::Backend as _,
     wire::{HEADER_LEN, Operation, WireError},
 };
-use nprpc_udp::{UdpClient, UdpServer, VecStorage, is_timeout};
+use temperance_udp::{UdpClient, UdpServer, VecStorage, is_timeout};
 
 interface! {
     mod example {
@@ -90,7 +90,7 @@ impl Drop for TestServer {
     }
 }
 
-fn client<S: nprpc::io::Storage>(server: &TestServer, storage: S) -> UdpClient<S> {
+fn client<S: temperance::io::Storage>(server: &TestServer, storage: S) -> UdpClient<S> {
     let client = UdpClient::connect(server.addr, storage).unwrap();
     client.set_timeout(Some(Duration::from_secs(5))).unwrap();
     client
@@ -139,7 +139,7 @@ fn unknown_method() {
     ));
     assert!(matches!(
         server.stop()[..],
-        [Served::Rejected(nprpc::ServerError::UnknownMethod)]
+        [Served::Rejected(temperance::ServerError::UnknownMethod)]
     ));
 }
 

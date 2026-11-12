@@ -2,10 +2,10 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-//! # nprpc over UDP
+//! # temperance over UDP
 //!
-//! Blocking [`nprpc`] clients and servers using [`std::net::UdpSocket`]. Each
-//! request and response is sent as a single datagram, and like `nprpc` itself,
+//! Blocking [`temperance`] clients and servers using [`std::net::UdpSocket`]. Each
+//! request and response is sent as a single datagram, and like `temperance` itself,
 //! nothing is retried: a lost datagram shows up as a timeout on the client.
 //!
 //! ## Client
@@ -13,8 +13,8 @@
 //! ```rust,no_run
 //! use std::time::Duration;
 //!
-//! use nprpc::{autobuffer, interface};
-//! use nprpc_udp::UdpClient;
+//! use temperance::{autobuffer, interface};
+//! use temperance_udp::UdpClient;
 //!
 //! interface! {
 //!     mod example {
@@ -34,8 +34,8 @@
 //! ## Server
 //!
 //! ```rust,no_run
-//! use nprpc::{Request, autobuffer, interface};
-//! use nprpc_udp::UdpServer;
+//! use temperance::{Request, autobuffer, interface};
+//! use temperance_udp::UdpServer;
 //!
 //! interface! {
 //!     mod example {
@@ -61,7 +61,7 @@
 
 use std::io;
 
-use nprpc::io::{Storage, StorageView};
+use temperance::io::{Storage, StorageView};
 
 pub mod client;
 pub mod server;
@@ -79,7 +79,7 @@ pub const MAX_UDP_PAYLOAD: usize = 65_527;
 ///
 /// Useful when sizes aren't known at compile time, e.g. for a client making
 /// calls from a schema it loaded at runtime. Otherwise, prefer buffers sized
-/// with [`nprpc::autobuffer!`].
+/// with [`temperance::autobuffer!`].
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct VecStorage {
     pub rqst_buf: Vec<u8>,
@@ -89,7 +89,7 @@ pub struct VecStorage {
 impl VecStorage {
     /// Makes zeroed buffers of the given sizes.
     ///
-    /// Both sizes include the [`HEADER_LEN`](nprpc::wire::HEADER_LEN) byte
+    /// Both sizes include the [`HEADER_LEN`](temperance::wire::HEADER_LEN) byte
     /// header.
     pub fn new(rqst_len: usize, resp_len: usize) -> Self {
         Self {

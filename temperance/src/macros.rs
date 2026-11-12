@@ -24,7 +24,7 @@
 ///
 /// ```rust
 /// # #![allow(clippy::unexpected_cfgs)]
-/// use nprpc::interface;
+/// use temperance::interface;
 ///
 /// // This defines an interface. This interface is called "example".
 /// // We use the `mod` keyword because we generate a Rust `mod` with
@@ -498,7 +498,7 @@ macro_rules! compose_interfaces {
 /// applied to the `static`.
 ///
 /// ```rust
-/// use nprpc::{interface, flat_interface};
+/// use temperance::{interface, flat_interface};
 ///
 /// interface! {
 ///     mod example {
@@ -568,7 +568,7 @@ macro_rules! flat_interface {
 /// trait.
 ///
 /// ```rust
-/// use nprpc::{interface, autobuffer};
+/// use temperance::{interface, autobuffer};
 ///
 /// interface! {
 ///     mod example {

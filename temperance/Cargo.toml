@@ -1,11 +1,11 @@
 [package]
-name = "nprpc"
+name = "temperance"
 version = "2.1.3"
 authors = ["James Munns <me@jamesmunns.com>"]
 edition = "2024"
 readme = "README.md"
-repository = "https://github.com/jamesmunns/nprpc"
-description = "It's not Postcard-RPC"
+repository = "https://github.com/jamesmunns/temperance"
+description = "RPC, in moderation"
 license = "MPL-2.0"
 categories = [
     "embedded",
@@ -14,7 +14,7 @@ categories = [
 keywords = [
     "serde",
 ]
-documentation = "https://docs.rs/nprpc/"
+documentation = "https://docs.rs/temperance/"
 
 [package.metadata.docs.rs]
 all-features = true

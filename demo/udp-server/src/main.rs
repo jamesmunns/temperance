@@ -1,6 +1,6 @@
-use nprpc::{Served, autobuffer};
-use nprpc_udp::UdpServer;
 use postcard_schema_ng::max_len::MaxLenString;
+use temperance::{Served, autobuffer};
+use temperance_udp::UdpServer;
 use udp_api::composite;
 
 const PORT: u16 = 5501;
@@ -13,19 +13,19 @@ struct ServerImpl {
 }
 
 impl udp_api::hello::Server for ServerImpl {
-    fn loopback(&mut self, rqst: nprpc::Request<u32>) -> u32 {
+    fn loopback(&mut self, rqst: temperance::Request<u32>) -> u32 {
         println!("hello/loopback: {}", rqst.body);
         *rqst.body
     }
 }
 
 impl udp_api::kv::Server for ServerImpl {
-    fn set_name(&mut self, rqst: nprpc::Request<MaxLenString<32>>) {
+    fn set_name(&mut self, rqst: temperance::Request<MaxLenString<32>>) {
         println!("kv/set_name: {}", rqst.body);
         self.name = Some(rqst.body.clone());
     }
 
-    fn get_name(&mut self, _req: nprpc::Request<()>) -> Option<MaxLenString<32>> {
+    fn get_name(&mut self, _req: temperance::Request<()>) -> Option<MaxLenString<32>> {
         println!("kv/get_name");
         self.name.clone()
     }
