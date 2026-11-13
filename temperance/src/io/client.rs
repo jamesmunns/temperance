@@ -1,6 +1,6 @@
 use core::fmt::Debug;
 
-use postcard_schema_ng::key::Key;
+use postcard_schema_ng::{Schema, key::Key};
 
 use crate::{
     Response,
@@ -75,6 +75,20 @@ pub trait Io {
         outgoing: &[u8],
         incoming: &'a mut [u8],
     ) -> Result<&'a [u8], Self::Error>;
+
+    /// Same as `send_then_receive_raw_frames()`, but also provides an optional
+    /// max response frame size hint.
+    ///
+    /// This can be used to cap the buffer provided to receive a response.
+    fn send_then_receive_raw_frames_hinted<'a>(
+        &mut self,
+        outgoing: &[u8],
+        incoming: &'a mut [u8],
+        max_resp_frame: Option<usize>,
+    ) -> Result<&'a [u8], Self::Error> {
+        let _ = max_resp_frame;
+        self.send_then_receive_raw_frames(outgoing, incoming)
+    }
 }
 
 // TODO: "Backend" isn't a very meaningful name. Come up with a name that better
@@ -115,7 +129,8 @@ pub trait Backend {
         &'resp mut self,
         rqst: &M::Request<'rqst>,
     ) -> Result<Response<M::Response<'resp>>, ClientIoError<<Self::Io as Io>::Error>> {
-        let RawResponse { hedr, body } = exchange(self, M::KEY, |buf| {
+        let max_resp_frame = const { max_resp_frame::<M>() };
+        let RawResponse { hedr, body } = exchange(self, M::KEY, max_resp_frame, |buf| {
             postcard::to_slice(rqst, buf)
                 .map(|used| used.len())
                 .map_err(ClientError::RequestSerialize)
@@ -139,7 +154,7 @@ pub trait Backend {
         key: Key,
         rqst_body: &[u8],
     ) -> Result<RawResponse<'resp>, ClientIoError<<Self::Io as Io>::Error>> {
-        exchange(self, key, |buf| {
+        exchange(self, key, None, |buf| {
             buf.get_mut(..rqst_body.len())
                 .ok_or(ClientError::RequestSerialize(
                     postcard::Error::SerializeBufferFull,
@@ -164,6 +179,7 @@ pub struct RawResponse<'resp> {
 fn exchange<'resp, B, F>(
     backend: &'resp mut B,
     key: Key,
+    max_resp_frame: Option<usize>,
     write_body: F,
 ) -> Result<RawResponse<'resp>, ClientIoError<<B::Io as Io>::Error>>
 where
@@ -189,7 +205,7 @@ where
 
     // Exchange...
     let recvd = interface
-        .send_then_receive_raw_frames(used, resp_buf)
+        .send_then_receive_raw_frames_hinted(used, resp_buf, max_resp_frame)
         .map_err(ClientIoError::Io)?;
 
     // DESERIALIZE INCOMING
@@ -228,6 +244,19 @@ where
         hedr: hedr_resp,
         body,
     })
+}
+
+/// Calculates the largest possible response buffer size
+const fn max_resp_frame<M: Method>() -> Option<usize> {
+    let err = match WireError::SCHEMA.max_size() {
+        Some(n) => n,
+        None => panic!("`WireError` must have a max size"),
+    };
+    match M::INFO.resp_schema.max_size() {
+        Some(n) if n > err => Some(HEADER_LEN + n),
+        Some(_) => Some(HEADER_LEN + err),
+        None => None,
+    }
 }
 
 /// Deserializes a response body, which must use all of `body`
