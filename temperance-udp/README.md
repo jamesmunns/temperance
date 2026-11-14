@@ -1,4 +1,4 @@
-# nprpc-udp
+# temperance-udp
 
-Blocking UDP clients and servers for [`nprpc`](https://crates.io/crates/nprpc),
+Blocking UDP clients and servers for [`temperance`](https://crates.io/crates/temperance),
 using `std::net::UdpSocket`.
